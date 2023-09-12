@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>快点直播</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://jsd.onmicrosoft.cn/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://cdnjs.loli.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.loli.net/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://jsd.onmicrosoft.cn/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+
+    <link rel="stylesheet"
+        href="https://g.alicdn.com/apsara-media-box/imp-web-player/2.16.3/skins/default/aliplayer-min.css" />
+    <script charset="utf-8" type="text/javascript"
+        src="https://g.alicdn.com/apsara-media-box/imp-web-player/2.16.3/aliplayer-min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+         
+      
+            <ul class="nav nav-pills">
+              <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">首页</a></li>
+              <li class="nav-item"><a href="https://live.fanmingming.com/tv/m3u/global.m3u" class="nav-link">电视直播</a></li>
+              <li class="nav-item"><a href="https://live.fanmingming.com/tv/m3u/ipv6.m3u" class="nav-link">IPTV(IPV6专用)</a></li>
+              <li class="nav-item"><a href="https://live.fanmingming.com/radio/m3u/index.m3u" class="nav-link">广播直播</a></li>
+              <li class="nav-item"><a href="https://live.fanmingming.com/e.xml" class="nav-link">EPG接口</a></li>
+            </ul>
+          </header>
+          <h1 align="center"> ✯ 一个国内可直连的直播源分享项目 ✯ </h1>
+          <h3 align="center" id="🔕-永久免费-直连访问-完整开源-不含广告-完善的台标-直播源支持ipv4-ipv6双栈访问-🔕">🔕 永久免费 直连访问 完整开源 不含广告 完善的台标 直播源支持IPv4/IPv6双栈访问 🔕<a class="anchorjs-link " href="#🔕-永久免费-直连访问-完整开源-不含广告-完善的台标-直播源支持ipv4-ipv6双栈访问-🔕" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em / 1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+        <div class="row">
+           
+            <div id="playerModal" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div id="J_prismPlayer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 循环渲染频道 -->
+
+            <ul id="channelList"></ul>
+        </div>
+
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <ul>
+                <li>所有播放源均收集于互联网，仅供测试研究使用，不得商用。</li>
+                <li>通过M3U8 Web Player测试直播源需使用https协议的直播源链接。</li>
+                <li>部分广播电台节目播出具有一定的时效性，需要在指定时段进行收听。</li>
+                <li>本项目不存储任何的流媒体内容，所有的法律责任与后果应由使用者自行承担。</li>
+                <li>您可以Fork本项目，但引用本项目内容到其他仓库的情况，务必要遵守开源协议。</li>
+                <li>本项目不保证直播频道的有效性，直播内容可能受直播服务提供商因素影响而失效。</li>
+                <li>所有文件均托管在<a href="https://github.com/fanmingming/live">GitHub</a>且自动构建，由项目发起人公益维护，欢迎Star本项目或点击<a href="https://github.com/fanmingming/live/issues/new/choose">Issues</a>反馈您的问题。</li>
+                <li>您可以编辑本项目的m3u文件或上传缺失的频道Logo到<code class="language-plaintext highlighter-rouge">tv</code>或<code class="language-plaintext highlighter-rouge">radio</code>目录下并发起拉取请求，收到请求后我们会对您提交的内容进行验证，审核通过后会自动发布。</li>
+              </ul>
+            <div class="col-md-4 d-flex align-items-center">
+              <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+              </a>
+              <span class="mb-3 mb-md-0 text-muted">© 2023 快点直播</span>
+            </div>
+        
+           
+          </footer>
+    </div>
+
+    <script>
+        // 在这里插入上述解析m3u文件的代码
+        fetch('https://live.fanmingming.com/tv/m3u/global.m3u')
+            .then(response => response.text())
+            .then(data => {
+                // 在这里处理m3u文件的内容
+                const lines = data.split('\n');
+                const channels = [];
+
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    if (line.startsWith('#EXTINF')) {
+                        const channelInfo = line.match(/tvg-id="([^"]+)" tvg-name="([^"]+)" tvg-logo="([^"]+)" group-title="([^"]+)",(.+)/);
+                        if (channelInfo && channelInfo.length === 6) {
+                            const channel = {
+                                id: channelInfo[1],
+                                name: channelInfo[2],
+                                logo: channelInfo[3],
+                                group: channelInfo[4],
+                                url: lines[i + 1] // 下一行是频道的URL
+                            };
+                            channels.push(channel);
+                        }
+                    }
+                }
+
+                // 在这里插入上述解析m3u文件的代码
+
+                const channelListElement = document.getElementById('channelList');
+                channels.forEach(channel => {
+                    const colDiv = document.createElement('div');
+                    colDiv.classList.add('col-md-3');
+
+                    const cardDiv = document.createElement('div');
+                    cardDiv.classList.add('card');
+
+                    const img = document.createElement('img');
+                    img.src = channel.logo;
+                    img.classList.add('card-img-top');
+                    img.alt = '频道图片';
+                    cardDiv.appendChild(img);
+
+                    const cardBodyDiv = document.createElement('div');
+                    cardBodyDiv.classList.add('card-body');
+
+                    const title = document.createElement('h5');
+                    title.classList.add('card-title');
+                    title.textContent = channel.name;
+                    cardBodyDiv.appendChild(title);
+
+                    const link = document.createElement('a');
+                    link.href = channel.url;
+                    link.classList.add('btn', 'btn-primary');
+                    link.textContent = '播放';
+                    cardBodyDiv.appendChild(link);
+                    link.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        // 阻止链接的默认行为
+                        // 判断链接是否为 .m3u8 结尾
+                        if (channel.url.endsWith('.m3u8')) {
+                            //链接是以 .m3u8 结尾
+                            // 弹出播放器弹窗
+                            $('#playerModal').modal('show');
+
+                            // 创建阿里云播放器实例并播放视频
+                            var player = new Aliplayer({
+                                id: 'J_prismPlayer',
+                                source: channel.url, // 使用频道的URL作为播放地址
+                            }, function (player) {
+                                console.log('The player is created.');
+                            });
+
+                        } else {
+                            //链接不是以 .m3u8 结尾
+                            fetch('https://cors.quickso.cn/?' + channel.url)
+                                .then(function (response) {
+                                    return response.text();
+                                })
+                                .then(function (data) {
+                                    channel.reurl = data; // 将获取到的 M3U8 文件内容存储在 channel.reurl 变量中
+
+                                    // 创建一个 Blob 对象，将 M3U8 文件内容存储为文件
+                                    var blob = new Blob([channel.reurl], { type: 'application/vnd.apple.mpegurl' });
+
+                                    // 生成文件链接
+                                    var url = URL.createObjectURL(blob);
+
+                                    // 将文件链接存储在 channel.reurl 变量中
+                                    channel.reurl = url+'.m3u8';
+                                    
+                                    // 弹出播放器弹窗
+                                    $('#playerModal').modal('show');
+
+                                    // 创建阿里云播放器实例并播放视频
+                                    var player = new Aliplayer({
+                                        id: 'J_prismPlayer',
+                                        source: channel.reurl, // 使用频道的URL作为播放地址
+                                    }, function (player) {
+                                        console.log('The player is created.');
+                                    });
+                                })
+                                .catch(function (error) {
+                                    console.log('请求出错:', error);
+                                });
+                        }
+
+                    });
+
+                    cardDiv.appendChild(cardBodyDiv);
+                    colDiv.appendChild(cardDiv);
+                    channelListElement.appendChild(colDiv);
+                });
+
+            })
+            .catch(error => {
+                console.log('请求m3u文件时发生错误:', error);
+            });
+
+
+
+    </script>
+</body>
+
+</html>
