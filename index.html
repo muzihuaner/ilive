@@ -12,14 +12,7 @@
     <!-- Bootstrap JS -->
     <script src="https://jsd.onmicrosoft.cn/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="style.css">
-
-
-    <!-- <link rel="stylesheet"
-        href="https://g.alicdn.com/apsara-media-box/imp-web-player/2.16.3/skins/default/aliplayer-min.css" />
-    <script charset="utf-8" type="text/javascript"
-        src="https://g.alicdn.com/apsara-media-box/imp-web-player/2.16.3/aliplayer-min.js"></script>
- -->
-
+    <link rel="shortcut icon" href="https://quickso.cn/favicon.ico" type="image/x-icon" />
     <link href="https://cdnjs.loli.net/ajax/libs/video.js/8.5.3/video-js.css" rel="stylesheet">
     <script src="https://cdnjs.loli.net/ajax/libs/video.js/8.5.3/video.min.js"></script>
     <script src="https://jsd.onmicrosoft.cn/npm/hls.js@latest"></script>
@@ -200,7 +193,11 @@
                                         src: videoUrl,
                                         type: 'application/x-mpegURL'
                                     });
+                                    videoPlayer.load(); // 使用load方法重新加载视频源
                                     videoPlayer.autoplay(true); // 设置自动播放
+                                    videoPlayer.on('error', function(error) {
+                                        console.log('播放器错误:', error);
+                                      });
                                 }
                             };
 
