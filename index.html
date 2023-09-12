@@ -164,31 +164,50 @@
                         event.preventDefault();
                         // 阻止链接的默认行为
 
-                        var url = 'https://cors.quickso.cn/?' + channel.url;
-                        //链接是以 .m3u8 结尾
-                        // 弹出播放器弹窗
-                        $('#playerModal').modal('show');
-                        var videoElement = document.getElementById('my-source');
-                        videoElement.src = url;
-                        var xhr = new XMLHttpRequest();
-                        xhr.open('GET', url, true);
-                        xhr.responseType = 'blob';
+                        if (channel.url.endsWith('.m3u8')) {
+                            // 链接以.m3u8结尾
+                            // 弹出播放器弹窗
+                            var url = channel.url
+                            $('#playerModal').modal('show');
+                            var videoElement = document.getElementById('my-source');
+                            videoElement.src = url;
 
-                        xhr.onload = function () {
-                            if (xhr.status === 200) {
-                                var videoBlob = xhr.response;
-                                var videoUrl = URL.createObjectURL(videoBlob);
+                            var player = videojs('my-video');
+                            player.src({
+                                src: url,
+                                type: 'application/x-mpegURL'
+                            });
+                            player.play();
+                        } else {
+                            // 链接不是以.m3u8结尾
+                            console.log('链接不是以.m3u8结尾');
+                            var url = 'https://cors.quickso.cn/?' + channel.url;
+                            // 弹出播放器弹窗
+                            $('#playerModal').modal('show');
+                            var videoElement = document.getElementById('my-source');
+                            videoElement.src = url;
+                            var xhr = new XMLHttpRequest();
+                            xhr.open('GET', url, true);
+                            xhr.responseType = 'blob';
 
-                                var videoPlayer = videojs('my-video');
-                                videoPlayer.src({
-                                    src: videoUrl,
-                                    type: 'application/x-mpegURL'
-                                });
-                                videoPlayer.autoplay(true); // 设置自动播放
-                            }
-                        };
+                            xhr.onload = function () {
+                                if (xhr.status === 200) {
+                                    var videoBlob = xhr.response;
+                                    var videoUrl = URL.createObjectURL(videoBlob);
 
-                        xhr.send();
+                                    var videoPlayer = videojs('my-video');
+                                    videoPlayer.src({
+                                        src: videoUrl,
+                                        type: 'application/x-mpegURL'
+                                    });
+                                    videoPlayer.autoplay(true); // 设置自动播放
+                                }
+                            };
+
+                            xhr.send();
+                        }
+
+
                     });
 
 
