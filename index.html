@@ -164,22 +164,24 @@
                         var xhr = new XMLHttpRequest();
                         xhr.open('GET', url, true);
                         xhr.responseType = 'blob';
-                        
-                        xhr.onload = function() {
-                          if (xhr.status === 200) {
-                            var videoBlob = xhr.response;
-                            var videoUrl = URL.createObjectURL(videoBlob);
-                        
-                            var videoPlayer = videojs('my-video');
-                            videoPlayer.src({
-                              src: videoUrl,
-                              type: 'application/x-mpegURL'
-                            });
-                          }
+
+                        xhr.onload = function () {
+                            if (xhr.status === 200) {
+                                var videoBlob = xhr.response;
+                                var videoUrl = URL.createObjectURL(videoBlob);
+
+                                var videoPlayer = videojs('my-video');
+                                videoPlayer.src({
+                                    src: videoUrl,
+                                    type: 'application/x-mpegURL'
+                                });
+                                videoPlayer.autoplay(true); // 设置自动播放
+                            }
                         };
-                        
+
                         xhr.send();
                     });
+
 
 
 
