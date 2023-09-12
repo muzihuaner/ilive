@@ -130,11 +130,12 @@
                     link.classList.add('btn', 'btn-primary');
                     link.textContent = '播放';
                     cardBodyDiv.appendChild(link);
+                  
                     link.addEventListener('click', function (event) {
                         event.preventDefault();
                         // 阻止链接的默认行为
-                        // 判断链接是否为 .m3u8 结尾
-                        if (channel.url.endsWith('.m3u8')) {
+                     
+                            var url='https://cors.quickso.cn/?'+channel.url
                             //链接是以 .m3u8 结尾
                             // 弹出播放器弹窗
                             $('#playerModal').modal('show');
@@ -142,44 +143,10 @@
                             // 创建阿里云播放器实例并播放视频
                             var player = new Aliplayer({
                                 id: 'J_prismPlayer',
-                                source: channel.url, // 使用频道的URL作为播放地址
+                                source: url, // 使用频道的URL作为播放地址
                             }, function (player) {
                                 console.log('The player is created.');
                             });
-
-                        } else {
-                            //链接不是以 .m3u8 结尾
-                            fetch('https://cors.quickso.cn/?' + channel.url)
-                                .then(function (response) {
-                                    return response.text();
-                                })
-                                .then(function (data) {
-                                    channel.reurl = data; // 将获取到的 M3U8 文件内容存储在 channel.reurl 变量中
-
-                                    // 创建一个 Blob 对象，将 M3U8 文件内容存储为文件
-                                    var blob = new Blob([channel.reurl], { type: 'application/vnd.apple.mpegurl' });
-
-                                    // 生成文件链接
-                                    var url = URL.createObjectURL(blob);
-
-                                    // 将文件链接存储在 channel.reurl 变量中
-                                    channel.reurl = url;
-                                    
-                                    // 弹出播放器弹窗
-                                    $('#playerModal').modal('show');
-
-                                    // 创建阿里云播放器实例并播放视频
-                                    var player = new Aliplayer({
-                                        id: 'J_prismPlayer',
-                                        source: channel.reurl, // 使用频道的URL作为播放地址
-                                    }, function (player) {
-                                        console.log('The player is created.');
-                                    });
-                                })
-                                .catch(function (error) {
-                                    console.log('请求出错:', error);
-                                });
-                        }
 
                     });
 
