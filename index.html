@@ -73,6 +73,7 @@
         <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top" id="tips">
             <h4>使用说明</h4>
             <ul>
+                <li><b>由于部分直播源不支持https，可以点击浏览器地址栏，在网站设置里将不安全内容设置为允许，即可在线播放！</b></li>
                 <li>所有播放源均收集于互联网，仅供测试研究使用，不得商用。</li>
                 <li>通过M3U8播放器测试直播源需使用https协议的直播源链接。</li>
                 <li>部分广播电台节目播出具有一定的时效性，需要在指定时段进行收听。</li>
@@ -222,6 +223,15 @@
 
 
     </script>
+
+    <script src="//jsd.onmicrosoft.cn/npm/sweetalert2@11"></script>
+<script>
+        swal({
+          title: '本站使用须知！',
+           text: "所有播放源均收集于互联网，仅供测试研究使用，不得商用。由于部分直播源不支持https，可以点击浏览器地址栏，在网站设置里将不安全内容设置为允许，即可在线播放！"
+            type: 'success',
+           confirmButtonText: '好的!'
+          })  </script>
 </body>
 
 </html>
