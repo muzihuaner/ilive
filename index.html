@@ -26,18 +26,13 @@
 
             <ul class="nav nav-pills">
                 <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">首页</a></li>
-                <li class="nav-item"><a
-                        href="https://live.fanmingming.com/tv/m3u/global.m3u"
-                        class="nav-link">电视直播</a>
+                <li class="nav-item"><a href="https://live.fanmingming.com/tv/m3u/global.m3u" class="nav-link">电视直播</a>
                 </li>
-                <li class="nav-item"><a
-                        href="https://live.fanmingming.com/tv/m3u/ipv6.m3u"
+                <li class="nav-item"><a href="https://live.fanmingming.com/tv/m3u/ipv6.m3u"
                         class="nav-link">IPTV(IPV6专用)</a></li>
-                <li class="nav-item"><a
-                        href="https://live.fanmingming.com/radio/m3u/index.m3u"
+                <li class="nav-item"><a href="https://live.fanmingming.com/radio/m3u/index.m3u"
                         class="nav-link">广播直播</a></li>
-                <li class="nav-item"><a href="https://live.fanmingming.com/e.xml"
-                        class="nav-link">EPG接口</a></li>
+                <li class="nav-item"><a href="https://live.fanmingming.com/e.xml" class="nav-link">EPG接口</a></li>
                 <li class="nav-item"><a href="https://quickso.cn/tools/m3u8/" class="nav-link">M3U8播放器</a>
                 </li>
                 <li class="nav-item"><a href="#tips" class="nav-link">使用说明</a>
@@ -54,7 +49,7 @@
             <div id="playerModal" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
-                        <div class="modal-body">
+                        <div class="modal-body text-center" >
                             <!-- <div id="J_prismPlayer"></div> -->
                             <video id="my-video" class="video-js vjs-default-skin" controls preload="auto" width="640"
                                 height="360">
@@ -171,37 +166,22 @@
                                 type: 'application/x-mpegURL'
                             });
                             player.play();
+                            console.log(url);
                         } else {
                             // 链接不是以.m3u8结尾
                             console.log('链接不是以.m3u8结尾');
                             var url = 'https://cors.quickso.cn/?' + channel.url;
                             // 弹出播放器弹窗
                             $('#playerModal').modal('show');
-                            var videoElement = document.getElementById('my-source');
-                            videoElement.src = url;
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('GET', url, true);
-                            xhr.responseType = 'blob';
+                            
+                                var videoPlayer = videojs("my-video");
+                                videoPlayer.src({
+                                  src: url,
+                                  type: "application/x-mpegURL"
+                                });
+                                videoPlayer.play();
+                              
 
-                            xhr.onload = function () {
-                                if (xhr.status === 200) {
-                                    var videoBlob = xhr.response;
-                                    var videoUrl = URL.createObjectURL(videoBlob);
-
-                                    var videoPlayer = videojs('my-video');
-                                    videoPlayer.src({
-                                        src: videoUrl,
-                                        type: 'application/x-mpegURL'
-                                    });
-                                    videoPlayer.load(); // 使用load方法重新加载视频源
-                                    videoPlayer.autoplay(true); // 设置自动播放
-                                    videoPlayer.on('error', function(error) {
-                                        console.log('播放器错误:', error);
-                                      });
-                                }
-                            };
-
-                            xhr.send();
                         }
 
 
@@ -225,13 +205,13 @@
     </script>
 
     <script src="//jsd.onmicrosoft.cn/npm/sweetalert2@11"></script>
-<script>
-        swal({
-          title: '本站使用须知！',
-           text: "所有播放源均收集于互联网，仅供测试研究使用，不得商用。由于部分直播源不支持https，可以点击浏览器地址栏，在网站设置里将不安全内容设置为允许，即可在线播放！"
+    <script>
+        new swal({
+            title: '本站使用须知！',
+            text: "所有播放源均收集于互联网，仅供测试研究使用，不得商用。由于部分直播源不支持https，可以点击浏览器地址栏，在网站设置里将不安全内容设置为允许，即可在线播放！",
             type: 'success',
-           confirmButtonText: '好的!'
-          })  </script>
+            confirmButtonText: '好的!'
+        })  </script>
 </body>
 
 </html>
