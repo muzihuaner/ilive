@@ -18,6 +18,11 @@
     <link href="https://cdnjs.loli.net/ajax/libs/video.js/8.5.3/video-js.css" rel="stylesheet">
     <script src="https://cdnjs.loli.net/ajax/libs/video.js/8.5.3/video.min.js"></script>
     <script src="https://jsd.onmicrosoft.cn/npm/hls.js@latest"></script>
+    <style>
+        .video-js{
+            width: -webkit-fill-available;
+        }
+    </style>
 </head>
 
 <body>
@@ -52,8 +57,8 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-body text-center" >
-                            <!-- <div id="J_prismPlayer"></div> -->
-                            <video id="my-video" class="video-js vjs-default-skin" controls preload="auto" width="640"
+                           
+                            <video id="my-video" class="video-js vjs-default-skin" controls preload="auto" width="auto"
                                 height="360">
                                 <source src="" type="application/x-mpegURL" id="my-source">
                             </video>
